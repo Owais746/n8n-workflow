@@ -1,0 +1,309 @@
+{
+  "nodes": [
+    {
+      "parameters": {
+        "sheetId": "1XYSOPanPvg107Rg1t3JUsnuLzYtLNS_sFE5kZygBUlA",
+        "range": "Sheet1!A:B",
+        "options": {}
+      },
+      "id": "e4c581f3-61a0-43a3-8a97-fefb26929267",
+      "name": "Get Emails",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 2,
+      "position": [
+        160,
+        60
+      ],
+      "alwaysOutputData": false,
+      "executeOnce": false,
+      "notesInFlow": false,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "XLTboC1MWauGmBzK",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "subject": "Supercharge Your Business with AI, Web & Design Solutions 🚀",
+        "message": "Hi there,\n\nAre you looking to build a website that not only looks great but works seamlessly? Or maybe you’re seeking automation solutions that save time and boost efficiency?\n\nAt *Devaura Hub*, we specialize in:\n\n🌐 Custom-coded websites tailored to your business\n🤖 AI model development for task automation\n🎨 Professional graphic design at affordable rates\n\nLet’s elevate your business with smart, scalable, and beautifully designed solutions.\n\n📞 WhatsApp: +92 337 8099063\n📧 Email: devaurahub@gmail.com\n\nLooking forward to working with you!\n\nBest regards,\nTeam Devaura Hub",
+        "toList": [
+          "={{ ($json[\"email\\n\"] || $json.email || \"\").trim() }}\n"
+        ],
+        "additionalFields": {
+          "bccList": [
+            []
+          ],
+          "senderName": ""
+        }
+      },
+      "id": "e5c5a2e1-ed2b-4ba1-b001-743953ca4936",
+      "name": "Send Email",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 1,
+      "position": [
+        640,
+        -20
+      ],
+      "retryOnFail": false,
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "DSC67cJvYezSJdYr",
+          "name": "Gmail account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "batchSize": 1,
+        "options": {}
+      },
+      "id": "0b704a35-facd-49e4-9370-19486e926031",
+      "name": "Split Emails",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 1,
+      "position": [
+        360,
+        60
+      ]
+    },
+    {
+      "parameters": {
+        "amount": 1,
+        "unit": "minutes"
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1600,
+        60
+      ],
+      "id": "1c525e50-d75a-488c-922e-02035bc9e98e",
+      "name": "Wait",
+      "webhookId": "807d604f-a7e8-4c1e-a97d-4606e4972a0f"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -80,
+        60
+      ],
+      "id": "272ba7e4-3ea1-4e2b-ba8f-8bcfa939463e",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1XYSOPanPvg107Rg1t3JUsnuLzYtLNS_sFE5kZygBUlA",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1XYSOPanPvg107Rg1t3JUsnuLzYtLNS_sFE5kZygBUlA/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "email": "={{ $json.email }}",
+            "status": "={{ $json.status }}"
+          },
+          "matchingColumns": [
+            "email"
+          ],
+          "schema": [
+            {
+              "id": "email",
+              "displayName": "email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        1340,
+        60
+      ],
+      "id": "523cbd68-7f55-4157-aeb6-19e93c23c941",
+      "name": "Append or update row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "XLTboC1MWauGmBzK",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "15daa05b-f1b4-44c5-a0ec-ad709c0f5d15",
+              "name": "status",
+              "value": "success",
+              "type": "string"
+            },
+            {
+              "id": "2b305f0f-3bbc-4f92-842f-b9e595d1df67",
+              "name": "email",
+              "value": "={{ $json.email }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1120,
+        60
+      ],
+      "id": "264bbb48-fb58-4f1d-8791-05a3ced46e28",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineAll",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        840,
+        60
+      ],
+      "id": "3de6180c-ceec-4bf4-80c2-bc0c7b3bdc8b",
+      "name": "Merge"
+    }
+  ],
+  "connections": {
+    "Get Emails": {
+      "main": [
+        [
+          {
+            "node": "Split Emails",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Email": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Emails": {
+      "main": [
+        [
+          {
+            "node": "Send Email",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Split Emails",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Get Emails",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append or update row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Append or update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "cacb1736a1d0262e10c4d6ab57db1e765879573aa53d3f9f7d5768631a3959f5"
+  }
+}
